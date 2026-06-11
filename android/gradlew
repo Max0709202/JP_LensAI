@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+set -e
+
+if command -v gradle >/dev/null 2>&1; then
+  exec gradle "$@"
+fi
+
+echo "Gradle is not installed and the generated Gradle wrapper is unavailable." >&2
+echo "Install Flutter, then run: flutter create . --platforms=android,ios" >&2
+echo "After that, run: flutter build apk --release" >&2
+exit 1
