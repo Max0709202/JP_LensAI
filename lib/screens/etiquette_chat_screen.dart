@@ -34,8 +34,6 @@ class _EtiquetteChatScreenState extends State<EtiquetteChatScreen> {
     'How do I behave at a shrine?',
     'What are onsen rules?',
     'How do I throw away garbage?',
-    'What should I do if I am late?',
-    'Can I use credit cards everywhere?',
     'Should I remove my shoes?',
     'How do I use a Japanese taxi?',
   ];
@@ -108,7 +106,8 @@ class _EtiquetteChatScreenState extends State<EtiquetteChatScreen> {
                   const SizedBox(width: 8),
                   IconButton.filled(
                     tooltip: 'Send',
-                    onPressed: _loading ? null : () => _submit(_controller.text),
+                    onPressed:
+                        _loading ? null : () => _submit(_controller.text),
                     icon: const Icon(Icons.send_rounded),
                   ),
                 ],

@@ -25,12 +25,11 @@ class MockAiService implements AiService {
   }
 
   @override
-  Future<List<MenuItemResult>> analyzeMenuImage(String imagePath) async {
+  Future<MenuItemResult> analyzeMenuImage(String imagePath) async {
     await Future<void>.delayed(const Duration(milliseconds: 800));
-    final items = _menuSamples()..shuffle(_random);
-    return items.take(3 + _random.nextInt(3)).map((json) {
-      return MenuItemResult.fromJson({'id': _uuid.v4(), ...json});
-    }).toList();
+    final items = _menuSamples();
+    final json = items[_random.nextInt(items.length)];
+    return MenuItemResult.fromJson({'id': _uuid.v4(), ...json});
   }
 
   @override
@@ -43,6 +42,12 @@ class MockAiService implements AiService {
           'Cultural context: Good service is considered part of normal hospitality, and staff may politely refuse extra money.\n\n'
           'What to do: Pay the listed price and say thank you.\n\n'
           'Useful phrase:\nありがとうございます。\nArigatou gozaimasu.\nThank you very much.';
+    }
+    if (lower.contains('eat') || lower.contains('walking')) {
+      return 'Direct answer: Eating while walking is usually avoided, especially in crowded streets, trains, shops, and temples.\n\n'
+          'Cultural context: People try to keep shared spaces clean and avoid bumping into others with food or drinks.\n\n'
+          'What to do: Eat near the place you bought the food, at a bench, or in a designated area.\n\n'
+          'Useful phrase:\nここで食べてもいいですか？\nKoko de tabete mo ii desu ka?\nMay I eat here?';
     }
     if (lower.contains('train') || lower.contains('talk')) {
       return 'Direct answer: Keep your voice low on trains and avoid phone calls.\n\n'
@@ -74,6 +79,12 @@ class MockAiService implements AiService {
           'What to do: Leave shoes neatly at the entrance and use slippers if provided.\n\n'
           'Useful phrase:\n靴を脱げばいいですか？\nKutsu o nugeba ii desu ka?\nShould I take off my shoes?';
     }
+    if (lower.contains('taxi')) {
+      return 'Direct answer: Japanese taxis are reliable; the rear door often opens automatically, so let the driver operate it.\n\n'
+          'Cultural context: Drivers value clear destinations and calm, polite communication.\n\n'
+          'What to do: Show the address on your phone, sit in the back, and pay by cash or card depending on the taxi.\n\n'
+          'Useful phrase:\nここまでお願いします。\nKoko made onegai shimasu.\nPlease take me here.';
+    }
 
     return 'Direct answer: When unsure, slow down, watch what local people do, and ask politely.\n\n'
         'Cultural context: Clear, considerate behavior matters more than perfect Japanese.\n\n'
@@ -100,7 +111,8 @@ class MockAiService implements AiService {
           'translation': 'Photography is prohibited.',
           'explanation':
               'Photos or videos are not allowed in this area, often for privacy, safety, or cultural reasons.',
-          'travelerAction': 'Put your camera away and avoid taking photos here.',
+          'travelerAction':
+              'Put your camera away and avoid taking photos here.',
           'category': 'Rules',
           'warningLevel': 'important',
           'phraseJapanese': 'ここで写真を撮ってもいいですか？',
@@ -136,7 +148,8 @@ class MockAiService implements AiService {
           'translation': 'Closed today.',
           'explanation':
               'The business is not open today, possibly because of a holiday or irregular closure.',
-          'travelerAction': 'Check another branch or return on a different day.',
+          'travelerAction':
+              'Check another branch or return on a different day.',
           'category': 'Business',
           'warningLevel': 'normal',
           'phraseJapanese': '明日は開いていますか？',
@@ -174,7 +187,8 @@ class MockAiService implements AiService {
           'translation': 'Reserved customers only.',
           'explanation':
               'Only people with reservations can enter or be served at this time.',
-          'travelerAction': 'Ask if same-day reservations or walk-ins are possible.',
+          'travelerAction':
+              'Ask if same-day reservations or walk-ins are possible.',
           'category': 'Restaurant',
           'warningLevel': 'normal',
           'phraseJapanese': '予約なしでも入れますか？',
@@ -184,7 +198,9 @@ class MockAiService implements AiService {
       ];
 
   List<Map<String, Object>> _menuSamples() => [
-        _menu('Tonkotsu Ramen', '豚骨ラーメン',
+        _menu(
+            'Tonkotsu Ramen',
+            '豚骨ラーメン',
             'A rich ramen dish made with pork bone broth.',
             ['pork broth', 'noodles', 'egg', 'green onion', 'soy seasoning'],
             ['wheat', 'egg', 'soy', 'possible sesame'],
@@ -192,7 +208,9 @@ class MockAiService implements AiService {
             '豚肉は入っていますか？',
             'Does this contain pork?',
             'Butaniku wa haitte imasu ka?'),
-        _menu('Sushi Set', '寿司セット',
+        _menu(
+            'Sushi Set',
+            '寿司セット',
             'Assorted vinegared rice topped with raw or cooked seafood.',
             ['rice', 'fish', 'shellfish', 'soy sauce', 'wasabi'],
             ['seafood', 'soy', 'possible egg'],
@@ -200,7 +218,9 @@ class MockAiService implements AiService {
             '生魚が入っていますか？',
             'Does this include raw fish?',
             'Namazakana ga haitte imasu ka?'),
-        _menu('Tempura Soba', '天ぷらそば',
+        _menu(
+            'Tempura Soba',
+            '天ぷらそば',
             'Buckwheat noodles with fried seafood or vegetables.',
             ['soba noodles', 'shrimp', 'wheat batter', 'dashi broth'],
             ['wheat', 'seafood', 'soy', 'buckwheat'],
@@ -208,7 +228,9 @@ class MockAiService implements AiService {
             '海老は入っていますか？',
             'Does this contain shrimp?',
             'Ebi wa haitte imasu ka?'),
-        _menu('Chicken Yakitori', '焼き鳥',
+        _menu(
+            'Chicken Yakitori',
+            '焼き鳥',
             'Grilled chicken skewers with salt or sweet soy-based sauce.',
             ['chicken', 'soy sauce', 'sugar', 'mirin'],
             ['soy', 'possible alcohol'],
@@ -216,7 +238,9 @@ class MockAiService implements AiService {
             'お酒は使っていますか？',
             'Is alcohol used in this?',
             'Osake wa tsukatte imasu ka?'),
-        _menu('Miso Soup', '味噌汁',
+        _menu(
+            'Miso Soup',
+            '味噌汁',
             'A warm soup with miso, tofu, seaweed, and dashi.',
             ['miso', 'tofu', 'seaweed', 'dashi'],
             ['soy', 'possible seafood'],
@@ -224,7 +248,9 @@ class MockAiService implements AiService {
             '出汁に魚は入っていますか？',
             'Does the broth contain fish?',
             'Dashi ni sakana wa haitte imasu ka?'),
-        _menu('Curry Rice', 'カレーライス',
+        _menu(
+            'Curry Rice',
+            'カレーライス',
             'Japanese curry over rice, usually mild and slightly sweet.',
             ['rice', 'curry roux', 'onion', 'carrot', 'meat'],
             ['wheat', 'dairy possible', 'soy'],
@@ -232,7 +258,9 @@ class MockAiService implements AiService {
             '肉は入っていますか？',
             'Does this contain meat?',
             'Niku wa haitte imasu ka?'),
-        _menu('Okonomiyaki', 'お好み焼き',
+        _menu(
+            'Okonomiyaki',
+            'お好み焼き',
             'Savory pancake with cabbage, batter, sauce, and toppings.',
             ['wheat batter', 'egg', 'cabbage', 'pork', 'seafood flakes'],
             ['wheat', 'egg', 'seafood', 'soy'],
@@ -240,7 +268,9 @@ class MockAiService implements AiService {
             '豚肉抜きにできますか？',
             'Can you make it without pork?',
             'Butaniku nuki ni dekimasu ka?'),
-        _menu('Udon', 'うどん',
+        _menu(
+            'Udon',
+            'うどん',
             'Thick wheat noodles served hot or cold with broth.',
             ['wheat noodles', 'dashi', 'soy sauce', 'green onion'],
             ['wheat', 'soy', 'possible seafood'],
@@ -248,7 +278,9 @@ class MockAiService implements AiService {
             '出汁はベジタリアンですか？',
             'Is the broth vegetarian?',
             'Dashi wa bejitarian desu ka?'),
-        _menu('Karaage', '唐揚げ',
+        _menu(
+            'Karaage',
+            '唐揚げ',
             'Japanese fried chicken, usually marinated in soy and ginger.',
             ['chicken', 'soy sauce', 'ginger', 'garlic', 'wheat starch'],
             ['wheat', 'soy', 'egg possible'],

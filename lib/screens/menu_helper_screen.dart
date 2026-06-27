@@ -31,7 +31,7 @@ class MenuHelperScreen extends StatefulWidget {
 class _MenuHelperScreenState extends State<MenuHelperScreen> {
   final _picker = ImagePicker();
   XFile? _image;
-  List<MenuItemResult> _items = [];
+  MenuItemResult? _item;
   bool _loading = false;
 
   @override
@@ -76,11 +76,11 @@ class _MenuHelperScreenState extends State<MenuHelperScreen> {
           ),
           if (_loading) const LoadingView(message: 'Checking the menu...'),
           const SizedBox(height: 12),
-          for (final item in _items)
+          if (_item != null)
             _MenuItemCard(
-              item: item,
-              onCopy: () => _copyPhrase(item),
-              onSave: () => _savePhrase(item),
+              item: _item!,
+              onCopy: () => _copyPhrase(_item!),
+              onSave: () => _savePhrase(_item!),
             ),
         ],
       ),
@@ -92,7 +92,7 @@ class _MenuHelperScreenState extends State<MenuHelperScreen> {
     if (image == null) return;
     setState(() {
       _image = image;
-      _items = [];
+      _item = null;
     });
   }
 
@@ -103,9 +103,9 @@ class _MenuHelperScreenState extends State<MenuHelperScreen> {
     }
     setState(() => _loading = true);
     try {
-      final items = await widget.aiService.analyzeMenuImage(_image!.path);
+      final item = await widget.aiService.analyzeMenuImage(_image!.path);
       if (!mounted) return;
-      setState(() => _items = items);
+      setState(() => _item = item);
     } catch (_) {
       _snack('Sorry, the menu could not be analyzed.');
     } finally {

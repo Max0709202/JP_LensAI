@@ -24,7 +24,8 @@ class SettingsScreen extends StatelessWidget {
                 _SettingLine(label: 'Name', value: AppConstants.appName),
                 _SettingLine(label: 'Version', value: AppConstants.version),
                 _SettingLine(label: 'Language', value: 'English'),
-                _SettingLine(label: 'AI mode', value: AppConstants.mockModeLabel),
+                _SettingLine(
+                    label: 'AI mode', value: AppConstants.mockModeLabel),
                 _SettingLine(
                   label: 'Backend',
                   value: 'Future API endpoint placeholder',

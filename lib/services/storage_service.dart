@@ -30,7 +30,8 @@ class StorageService {
     final prefs = await SharedPreferences.getInstance();
     final raw = prefs.getStringList(_savedPhrasesKey) ?? [];
     return raw
-        .map((item) => Phrase.fromJson(jsonDecode(item) as Map<String, dynamic>))
+        .map(
+            (item) => Phrase.fromJson(jsonDecode(item) as Map<String, dynamic>))
         .toList();
   }
 

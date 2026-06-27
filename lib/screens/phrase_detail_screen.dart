@@ -71,7 +71,8 @@ class PhraseDetailScreen extends StatelessWidget {
 
   Future<void> _copy(BuildContext context) async {
     await Clipboard.setData(
-      ClipboardData(text: '${phrase.japanese}\n${phrase.romaji}\n${phrase.english}'),
+      ClipboardData(
+          text: '${phrase.japanese}\n${phrase.romaji}\n${phrase.english}'),
     );
     if (context.mounted) _snack(context, 'Phrase copied.');
   }

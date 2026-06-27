@@ -34,14 +34,11 @@ class RemoteAiService implements AiService {
   }
 
   @override
-  Future<List<MenuItemResult>> analyzeMenuImage(String imagePath) async {
+  Future<MenuItemResult> analyzeMenuImage(String imagePath) async {
     // TODO: Replace imagePath placeholder with multipart image upload or OCR text.
     final response = await _post('/api/analyze-menu', {'imagePath': imagePath});
-    final data = jsonDecode(response.body) as List<dynamic>;
-    return data.map((item) {
-      final json = item as Map<String, dynamic>;
-      return MenuItemResult.fromJson({'id': _uuid.v4(), ...json});
-    }).toList();
+    final data = jsonDecode(response.body) as Map<String, dynamic>;
+    return MenuItemResult.fromJson({'id': _uuid.v4(), ...data});
   }
 
   @override
